@@ -4,6 +4,9 @@ const {
   addSkincare,
   getAllSkincareHandler,
   addSkincareFavorite,
+  updateSkincareHandler,
+  deleteSkincareHandler,
+  getAllFavoriteHandler,
 } = require("../controllers/skincareController");
 const {
   addHistory,
@@ -13,7 +16,7 @@ const {
 const {
   getProfile,
   updateUserHandler,
-  deleteUser,
+  deleteUserHandler,
 } = require("../controllers/userController");
 const authenticateToken = require("../middlewares/authToken");
 
@@ -28,15 +31,21 @@ router.get("/profile/:id", authenticateToken, getProfile);
 
 router.put("/profile/:id", authenticateToken, updateUserHandler);
 
-router.delete("/profile/:id", authenticateToken, deleteUser);
+router.delete("/profile/:id", authenticateToken, deleteUserHandler);
 
-router.post("/skincare/add", authenticateToken, addSkincare);
+router.post("/skincare", authenticateToken, addSkincare);
 
 router.get("/skincare", authenticateToken, getAllSkincareHandler);
 
-router.post("/favorite/add", authenticateToken, addSkincareFavorite);
+router.put("/skincare/:id", authenticateToken, updateSkincareHandler);
 
-router.post("/history/add", authenticateToken, addHistory);
+router.delete("/skincare/:id", authenticateToken, deleteSkincareHandler);
+
+router.post("/favorite", authenticateToken, addSkincareFavorite);
+
+router.get("/favorite/:id", authenticateToken, getAllFavoriteHandler);
+
+router.post("/history", authenticateToken, addHistory);
 
 router.get("/history", authenticateToken, getAllHistoryHandler);
 

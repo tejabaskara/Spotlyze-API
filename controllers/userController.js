@@ -43,7 +43,7 @@ const updateUserHandler = async (req, res) => {
   }
 };
 
-const deleteUser = async (req, res) => {
+const deleteUserHandler = async (req, res) => {
   try {
     const id = req.params.id; // Ambil parameter id dari request
 
@@ -52,15 +52,15 @@ const deleteUser = async (req, res) => {
 
     // Jika data tidak ditemukan, kirim response 404
     if (result.affectedRows === 0) {
-      return res.status(404).json({ message: "History not found" });
+      return res.status(404).json({ message: "User not found" });
     }
 
     // Response berhasil
-    res.status(200).json({ message: "History deleted successfully" });
+    res.status(200).json({ message: "User deleted successfully" });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Failed to delete history" });
+    res.status(500).json({ message: "Failed to delete user" });
   }
 };
 
-module.exports = { getProfile, updateUserHandler, deleteUser };
+module.exports = { getProfile, updateUserHandler, deleteUserHandler };

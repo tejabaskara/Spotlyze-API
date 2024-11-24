@@ -2,8 +2,11 @@ const {
   findSkincareByName,
   createSkincare,
   getAllSkincare,
-  findSkincareFavoriteByName,
+  findSkincareFavoriteById,
   createFavorite,
+  updateSkincareById,
+  deleteSkincareById,
+  getAllFavorite,
 } = require("../models/skincareModel");
 
 const addSkincare = async (req, res) => {
@@ -45,7 +48,53 @@ const getAllSkincareHandler = async (req, res) => {
     const skincares = await getAllSkincare();
     res.status(200).json(skincares);
   } catch (err) {
-    res.status(500).json({ message: "Failed to retrieve users" });
+    res.status(500).json({ message: "Failed to retrieve skincare" });
+  }
+};
+
+const updateSkincareHandler = async (req, res) => {
+  try {
+    const skincare_id = req.params.id; // Ambil parameter id dari request
+    const updateData = req.body; // Ambil data yang akan diupdate dari request body
+
+    // Pastikan data untuk update tidak kosong
+    if (!Object.keys(updateData).length) {
+      return res.status(400).json({ message: "No data provided for update" });
+    }
+
+    // Panggil fungsi untuk mengupdate data di database
+    const result = await updateSkincareById(skincare_id, updateData);
+
+    // Jika data tidak ditemukan, kirim response 404
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Skincare not found" });
+    }
+
+    // Response berhasil
+    res.status(200).json({ message: "Skincare updated successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to update Skincare" });
+  }
+};
+
+const deleteSkincareHandler = async (req, res) => {
+  try {
+    const skincaer_id = req.params.id; // Ambil parameter id dari request
+
+    // Panggil fungsi untuk menghapus data di database
+    const result = await deleteSkincareById(skincaer_id);
+
+    // Jika data tidak ditemukan, kirim response 404
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Skincare not found" });
+    }
+
+    // Response berhasil
+    res.status(200).json({ message: "Skincare deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to delete Skincare" });
   }
 };
 
@@ -61,7 +110,7 @@ const addSkincareFavorite = async (req, res) => {
   }
 
   try {
-    const existingFavorite = await findSkincareFavoriteByName(
+    const existingFavorite = await findSkincareFavoriteById(
       user_id,
       skincare_id
     );
@@ -80,4 +129,24 @@ const addSkincareFavorite = async (req, res) => {
   }
 };
 
-module.exports = { addSkincare, getAllSkincareHandler, addSkincareFavorite };
+const getAllFavoriteHandler = async (req, res) => {
+  try {
+    id = req.params.id;
+    const favorite = await getAllFavorite(id);
+    res.status(200).json(favorite);
+    if (!favorite) {
+      return res.status(404).json({ message: "Favorite not found" });
+    }
+  } catch (err) {
+    res.status(500).json({ message: "Failed to retrieve favorite" });
+  }
+};
+
+module.exports = {
+  addSkincare,
+  getAllSkincareHandler,
+  addSkincareFavorite,
+  updateSkincareHandler,
+  deleteSkincareHandler,
+  getAllFavoriteHandler,
+};
