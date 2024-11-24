@@ -37,7 +37,7 @@ const findUserById = async (user_id) => {
   }
 };
 
-const updateUser = async (id, updateData) => {
+const updateUserById = async (id, updateData) => {
   try {
     // Buat query update dengan parameter
     const [result] = await db.query(
@@ -51,5 +51,19 @@ const updateUser = async (id, updateData) => {
   }
 };
 
+const deleteUserById = async (id) => {
+  try {
+    // Buat query delete dengan parameter
+    const [result] = await db.query(
+      "DELETE FROM user WHERE user_id = ?",
+      [id]
+    );
+    return result; // Kembalikan hasil query
+  } catch (err) {
+    console.error(err);
+    throw new Error("Database query failed");
+  }
+};
 
-module.exports = { findUserByName, createUser, findUserById, updateUser };
+
+module.exports = { findUserByName, createUser, findUserById, updateUserById, deleteUserById };

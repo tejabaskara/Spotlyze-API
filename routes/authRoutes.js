@@ -13,6 +13,7 @@ const {
 const {
   getProfile,
   updateUserHandler,
+  deleteUser,
 } = require("../controllers/userController");
 const authenticateToken = require("../middlewares/authToken");
 
@@ -27,7 +28,7 @@ router.get("/profile/:id", authenticateToken, getProfile);
 
 router.put("/profile/:id", authenticateToken, updateUserHandler);
 
-router.delete("/profile/:id", authenticateToken, updateUserHandler);
+router.delete("/profile/:id", authenticateToken, deleteUser);
 
 router.post("/skincare/add", authenticateToken, addSkincare);
 

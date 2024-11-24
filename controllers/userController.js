@@ -1,9 +1,16 @@
-const { findUserById, updateUser } = require("../models/userModel");
+const {
+  findUserById,
+  updateUserById,
+  deleteUserById,
+} = require("../models/userModel");
 
 const getProfile = async (req, res) => {
   try {
     id = req.params.id;
     const history = await findUserById(id);
+    if (!history) {
+      return res.status(404).json({ message: "User not found" });
+    }
     res.status(200).json(history);
   } catch (err) {
     res.status(500).json({ message: "Failed to retrieve users" });
@@ -21,7 +28,7 @@ const updateUserHandler = async (req, res) => {
     }
 
     // Panggil fungsi untuk mengupdate data di database
-    const result = await updateUser(user_id, updateData);
+    const result = await updateUserById(user_id, updateData);
 
     // Jika data tidak ditemukan, kirim response 404
     if (result.affectedRows === 0) {
@@ -36,4 +43,24 @@ const updateUserHandler = async (req, res) => {
   }
 };
 
-module.exports = { getProfile, updateUserHandler };
+const deleteUser = async (req, res) => {
+  try {
+    const id = req.params.id; // Ambil parameter id dari request
+
+    // Panggil fungsi untuk menghapus data di database
+    const result = await deleteUserById(id);
+
+    // Jika data tidak ditemukan, kirim response 404
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "History not found" });
+    }
+
+    // Response berhasil
+    res.status(200).json({ message: "History deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to delete history" });
+  }
+};
+
+module.exports = { getProfile, updateUserHandler, deleteUser };
